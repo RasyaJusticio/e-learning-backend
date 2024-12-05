@@ -62,7 +62,10 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data' => null
+            'data' => [
+                'username' => $user->username,
+                'name' => $user->name
+            ]
         ])->cookie($cookie);
     }
 
