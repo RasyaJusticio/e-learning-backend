@@ -65,4 +65,36 @@ class AuthController extends Controller
             'data' => null
         ])->cookie($cookie);
     }
+
+    /**
+     * URL => /api/auth/logout
+     * METHOD => POST
+     */
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        $cookie = cookie('token', null, -1, null, null, true, true);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => null
+        ])->cookie($cookie);
+    }
+
+    /**
+     * URL => /api/auth/logout/all
+     * METHOD => POST
+     */
+    public function logoutFromAll(Request $request)
+    {
+        $request->user()->tokens()->delete();
+
+        $cookie = cookie('token', null, -1, null, null, true, true);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => null
+        ])->cookie($cookie);
+    }
 }
