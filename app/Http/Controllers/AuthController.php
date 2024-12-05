@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -33,5 +35,34 @@ class AuthController extends Controller
             'status' => 'success',
             'data' => null
         ], 200);
+    }
+
+    /**
+     * URL => /api/auth/login
+     * METHOD => POST
+     */
+    public function login(LoginRequest $request)
+    {
+        $fields = $request->validated();
+
+        $user = User::query()
+            ->where(['email' => $fields['email']])
+            ->first();
+
+        if (!$user || !Hash::check($fields['password'], $user->password)) {
+            return response()->json([
+                'status' => 'fail',
+                'message' => 'The provided credentials are incorrect.',
+                'data' => null
+            ], 401);
+        }
+
+        $token = $user->createToken('AUTH_TOKEN');
+        $cookie = cookie('token', $token->plainTextToken, 60 * 48, null, null, true, true);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => null
+        ])->cookie($cookie);
     }
 }
