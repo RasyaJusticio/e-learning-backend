@@ -26,6 +26,7 @@ class AuthController extends Controller
             'username' => $namePart . $uniqueId,
             'email' => $fields['email'],
             'password' => bcrypt($fields['password']),
+            'role' => $fields['role'],
         ]);
 
         return response()->json([

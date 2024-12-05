@@ -25,6 +25,7 @@ class RegisterRequest extends BaseFormRequest
         return [
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', Password::min(8)->letters()->mixedCase()->numbers()],
+            'role' => ['required', 'string', 'in:student,teacher'],
         ];
     }
 }
