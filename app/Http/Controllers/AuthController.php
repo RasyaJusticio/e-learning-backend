@@ -29,6 +29,7 @@ class AuthController extends Controller
             'email' => $fields['email'],
             'password' => bcrypt($fields['password']),
             'role' => $fields['role'],
+            'username_changed_at' => now()->subHours(24),
         ]);
 
         return response()->json([
