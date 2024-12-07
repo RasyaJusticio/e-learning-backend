@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Me\MeAvatarRequest;
 use App\Http\Requests\Me\MeUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MeController extends Controller
 {
@@ -45,5 +47,33 @@ class MeController extends Controller
                 'username' => $user->username,
             ]
         ], 200);
+    }
+
+    /**
+     * URL => /api/me/avatar
+     * METHOD => PATCH
+     */
+    public function avatar(MeAvatarRequest $request)
+    {
+        $user = $request->user();
+
+        $file = $request->file('avatar');
+
+        $path = Storage::disk('public')->putFileAs(
+            'avatars',
+            $file,
+            $file->hashName()
+        );
+
+        $user->update([
+            'avatar_url' => $path
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'avatar_url' => $path
+            ]
+        ]);
     }
 }

@@ -23,4 +23,5 @@ Route::group(['prefix' => 'auth'], function () {
 // Me Routes
 Route::group(['prefix' => 'me', 'middleware' => ['auth:sanctum']], function () {
     Route::patch('', [MeController::class, 'update']);
+    Route::patch('avatar', [MeController::class, 'avatar']);
 });
