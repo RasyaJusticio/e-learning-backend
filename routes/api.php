@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,4 +18,10 @@ Route::group(['prefix' => 'auth'], function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('logout/all', [AuthController::class, 'logoutFromAll']);
     });
+});
+
+// Me Routes
+Route::group(['prefix' => 'me', 'middleware' => ['auth:sanctum']], function () {
+    Route::patch('', [MeController::class, 'update']);
+    Route::patch('avatar', [MeController::class, 'avatar']);
 });
