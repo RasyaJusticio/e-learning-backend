@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -34,6 +36,21 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function classrooms()
+    {
+        if ($this->role === 'teacher') {
+            return $this->hasMany(Classroom::class, 'teacher_id', 'id');
+        } else if ($this->role === 'student') {
+            return $this->belongsToMany(User::class, 'classroom_student', 'classroom_id', 'student_id')
+                ->using(ClassroomStudent::class);
+        }
+    }
+
+    public function invites(): HasMany
+    {
+        return $this->hasMany(Invite::class, 'student_id', 'id');
+    }
 
     /**
      * Get the attributes that should be cast.

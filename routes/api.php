@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\InviteController;
 use App\Http\Controllers\MeController;
+use App\Http\Controllers\Teacher\ClassroomInviteController;
+use App\Http\Controllers\Teacher\TeacherClassroomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +28,25 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['prefix' => 'me', 'middleware' => ['auth:sanctum']], function () {
     Route::patch('', [MeController::class, 'update']);
     Route::patch('avatar', [MeController::class, 'avatar']);
+});
+
+// Classroom Routes
+Route::group(['prefix' => 'classes', 'middleware' => ['auth:sanctum']], function () {
+    Route::get('', [ClassroomController::class, 'index']);
+
+    Route::group(['middleware' => ['teacher-only']], function () {
+        Route::post('', [TeacherClassroomController::class, 'store']);
+
+        Route::group(['prefix' => '{classroom:uuid}'], function () {
+            Route::get('invites', [ClassroomInviteController::class, 'index']);
+            Route::post('invite', [ClassroomInviteController::class, 'invite']);
+            Route::delete('invite/{invite}', [ClassroomInviteController::class, 'destroy']);
+        });
+    });
+});
+
+// Invites Routes
+Route::group(['prefix' => 'invites', 'middleware' => ['auth:sanctum', 'student-only']], function () {
+    Route::get('', [InviteController::class, 'index']);
+    Route::post('{invite}/respond', [InviteController::class, 'respond']);
 });
