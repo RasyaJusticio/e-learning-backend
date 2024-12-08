@@ -38,7 +38,16 @@ class ClassroomInviteController extends Controller
                 ->first();
 
             if ($studentId) {
-                if ($classroom->invites()->where(['student_id' => $studentId])->exists()) {
+                // To prevent inviting an already invited student or a student already in the classroom
+                if (
+                    $classroom->invites()->where([
+                        'student_id' => $studentId,
+                        'status' => 'pending'
+                    ])->exists()
+                    || $classroom->students()->where([
+                        'id' => $studentId
+                    ])->exists()
+                ) {
                     continue;
                 }
 
