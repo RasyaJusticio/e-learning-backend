@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\InviteController;
 use App\Http\Controllers\MeController;
 use App\Http\Controllers\Teacher\ClassroomInviteController;
 use App\Http\Controllers\Teacher\TeacherClassroomController;
@@ -40,4 +41,9 @@ Route::group(['prefix' => 'classes', 'middleware' => ['auth:sanctum']], function
             Route::post('invite', [ClassroomInviteController::class, 'invite']);
         });
     });
+});
+
+// Invites Routes
+Route::group(['prefix' => 'invites', 'middleware' => ['auth:sanctum', 'student-only']], function () {
+    Route::get('', [InviteController::class, 'index']);
 });

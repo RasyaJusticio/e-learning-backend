@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -40,6 +42,11 @@ class User extends Authenticatable
         if ($this->role === 'teacher') {
             return $this->hasMany(Classroom::class, 'teacher_id', 'id');
         }
+    }
+
+    public function invites(): HasMany
+    {
+        return $this->hasMany(Invite::class, 'student_id', 'id');
     }
 
     /**
