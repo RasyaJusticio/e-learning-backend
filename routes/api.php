@@ -38,6 +38,7 @@ Route::group(['prefix' => 'classes', 'middleware' => ['auth:sanctum']], function
         Route::post('', [TeacherClassroomController::class, 'store']);
 
         Route::group(['prefix' => '{classroom:uuid}'], function () {
+            Route::get('invites', [ClassroomInviteController::class, 'index']);
             Route::post('invite', [ClassroomInviteController::class, 'invite']);
         });
     });

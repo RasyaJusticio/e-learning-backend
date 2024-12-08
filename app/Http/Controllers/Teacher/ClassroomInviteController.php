@@ -4,12 +4,54 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Classroom\ClassroomInviteRequest;
+use App\Http\Requests\Classroom\ClassroomInvitesRequest;
 use App\Models\Classroom;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class ClassroomInviteController extends Controller
 {
+    /**
+     * For teachers to invite students
+     * 
+     * URL => /api/classes/{uuid}/invite
+     * METHOD => POST
+     * MIDDLEWARE => ['auth:sanctum', 'teacher-only']
+     * PARAMS:
+     *  - status <array> - a filter to get invites by status. Possible values are:
+     *      - pending
+     *      - accepted
+     *      - declined
+     */
+    public function index(ClassroomInvitesRequest $request, Classroom $classroom)
+    {
+        $params = $request->validated();
+
+        if ($request->user()->id !== $classroom->teacher_id) {
+            return response()->json([
+                'status' => 'fail',
+                'message' => 'Forbidden',
+                'data' => null
+            ], 403);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $classroom->invites()
+                ->when($request->query("status"), function (Builder $query, array $status) {
+                    $query->whereIn('status', $status);
+                }, function (Builder $query) {
+                    $query->where('status', 'pending');
+                })
+                ->get()
+                ->map(function ($invite) {
+                    $invite->load('student');
+                    return $invite;
+                })
+        ]);
+    }
+
     /**
      * For teachers to invite students
      * 
