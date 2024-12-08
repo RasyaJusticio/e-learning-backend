@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Classroom\ClassroomInviteRequest;
 use App\Http\Requests\Classroom\ClassroomInvitesRequest;
 use App\Models\Classroom;
+use App\Models\Invite;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -102,6 +103,33 @@ class ClassroomInviteController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => count($createdInvites) > 0 ? $createdInvites : null
+        ]);
+    }
+
+    /**
+     * For teachers to delete an invite
+     * 
+     * URL => /api/classes/{uuid}/invite/{invite_id}
+     * METHOD => DELETE
+     * MIDDLEWARE => ['auth:sanctum', 'teacher-only']
+     */
+    public function destroy(Request $request, Classroom $classroom, Invite $invite)
+    {
+        $user = $request->user();
+
+        if ($user->id !== $classroom->teacher_id) {
+            return response()->json([
+                'status' => 'fail',
+                'message' => 'Forbidden',
+                'data' => null
+            ], 403);
+        }
+
+        $invite->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => null
         ]);
     }
 }

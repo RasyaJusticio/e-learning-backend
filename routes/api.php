@@ -40,6 +40,7 @@ Route::group(['prefix' => 'classes', 'middleware' => ['auth:sanctum']], function
         Route::group(['prefix' => '{classroom:uuid}'], function () {
             Route::get('invites', [ClassroomInviteController::class, 'index']);
             Route::post('invite', [ClassroomInviteController::class, 'invite']);
+            Route::delete('invite/{invite}', [ClassroomInviteController::class, 'destroy']);
         });
     });
 });
