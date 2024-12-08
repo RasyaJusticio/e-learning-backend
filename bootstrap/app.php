@@ -34,6 +34,24 @@ return Application::configure(basePath: dirname(__DIR__))
                         'data' => null
                     ], 404);
                 }
+
+                if (str_contains($message, 'No query results')) {
+                    preg_match('/\[App\\\\Models\\\\(.*?)\]/', $message, $matches);
+
+                    if (isset($matches[1])) {
+                        return response()->json([
+                            'status' => 'fail',
+                            'message' => $matches[1] . ' not found',
+                            'data' => null
+                        ], 404);
+                    }
+
+                    return response()->json([
+                        'status' => 'fail',
+                        'message' => 'Record not found',
+                        'data' => null
+                    ], 404);
+                }
             }
         });
     })->create();
