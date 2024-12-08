@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\MeController;
+use App\Http\Controllers\Teacher\ClassroomInviteController;
 use App\Http\Controllers\Teacher\TeacherClassroomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,5 +35,9 @@ Route::group(['prefix' => 'classes', 'middleware' => ['auth:sanctum']], function
 
     Route::group(['middleware' => ['teacher-only']], function () {
         Route::post('', [TeacherClassroomController::class, 'store']);
+
+        Route::group(['prefix' => '{classroom:uuid}'], function () {
+            Route::post('invite', [ClassroomInviteController::class, 'invite']);
+        });
     });
 });
