@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
@@ -24,6 +25,12 @@ class Classroom extends Model
     public function invites(): HasMany
     {
         return $this->hasMany(Invite::class);
+    }
+
+    public function students(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'classroom_student', 'student_id', 'classroom_id')
+            ->using(ClassroomStudent::class);
     }
 
     protected static function booted(): void

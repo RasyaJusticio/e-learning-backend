@@ -46,4 +46,5 @@ Route::group(['prefix' => 'classes', 'middleware' => ['auth:sanctum']], function
 // Invites Routes
 Route::group(['prefix' => 'invites', 'middleware' => ['auth:sanctum', 'student-only']], function () {
     Route::get('', [InviteController::class, 'index']);
+    Route::post('{invite}/respond', [InviteController::class, 'respond']);
 });

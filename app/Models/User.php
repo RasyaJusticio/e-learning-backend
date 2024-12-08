@@ -41,6 +41,9 @@ class User extends Authenticatable
     {
         if ($this->role === 'teacher') {
             return $this->hasMany(Classroom::class, 'teacher_id', 'id');
+        } else if ($this->role === 'student') {
+            return $this->belongsToMany(User::class, 'classroom_student', 'classroom_id', 'student_id')
+                ->using(ClassroomStudent::class);
         }
     }
 
