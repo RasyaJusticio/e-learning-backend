@@ -35,6 +35,13 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function classrooms()
+    {
+        if ($this->role === 'teacher') {
+            return $this->hasMany(Classroom::class, 'teacher_id', 'id');
+        }
+    }
+
     /**
      * Get the attributes that should be cast.
      *

@@ -15,7 +15,7 @@ class TeacherOnly
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!isset($request->user)) {
+        if (!$request->user()) {
             return response()->json([
                 'status' => 'fail',
                 'message' => 'Unauthorized',
