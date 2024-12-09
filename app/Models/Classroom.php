@@ -17,6 +17,15 @@ class Classroom extends Model
         'teacher_id',
     ];
 
+    public function isMember(User $user): bool
+    {
+        if ($user->id === $this->teacher_id) {
+            return true;
+        }
+
+        return $this->students()->where('student_id', $user->id)->exists();
+    }
+
     public function teacher(): BelongsTo
     {
         return $this->belongsTo(User::class, 'teacher_id', 'id');
