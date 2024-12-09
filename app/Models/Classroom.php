@@ -36,15 +36,20 @@ class Classroom extends Model
         return $this->belongsTo(User::class, 'teacher_id', 'id');
     }
 
-    public function invites(): HasMany
-    {
-        return $this->hasMany(Invite::class);
-    }
-
     public function students(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'classroom_student', 'student_id', 'classroom_id')
             ->using(ClassroomStudent::class);
+    }
+
+    public function materials(): HasMany
+    {
+        return $this->hasMany(Material::class);
+    }
+
+    public function invites(): HasMany
+    {
+        return $this->hasMany(Invite::class);
     }
 
     protected static function booted(): void
