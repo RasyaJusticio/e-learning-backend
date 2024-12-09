@@ -7,6 +7,7 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\MeController;
 use App\Http\Controllers\Teacher\ClassroomInviteController;
 use App\Http\Controllers\Teacher\TeacherClassroomController;
+use App\Http\Controllers\Teacher\TeacherMaterialController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +45,8 @@ Route::group(['prefix' => 'classes', 'middleware' => ['auth:sanctum']], function
             Route::get('invites', [ClassroomInviteController::class, 'index']);
             Route::post('invite', [ClassroomInviteController::class, 'invite']);
             Route::delete('invite/{invite}', [ClassroomInviteController::class, 'destroy']);
+
+            Route::post('materials', [TeacherMaterialController::class, 'store']);
         });
 
         Route::group(['middleware' => ['class_member-only']], function () {
