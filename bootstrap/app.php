@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ClassMemberOnly;
+use App\Http\Middleware\ClassOwnerOnly;
 use App\Http\Middleware\StudentOnly;
 use App\Http\Middleware\TeacherOnly;
 use Illuminate\Foundation\Application;
@@ -21,7 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'teacher-only' => TeacherOnly::class,
             'student-only' => StudentOnly::class,
-            'member-only' => ClassMemberOnly::class,
+            'class_member-only' => ClassMemberOnly::class,
+            'class_owner-only' => ClassOwnerOnly::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

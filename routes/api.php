@@ -37,7 +37,7 @@ Route::group(['prefix' => 'classes', 'middleware' => ['auth:sanctum']], function
     Route::group(['middleware' => ['teacher-only']], function () {
         Route::post('', [TeacherClassroomController::class, 'store']);
 
-        Route::group(['prefix' => '{classroom:uuid}'], function () {
+        Route::group(['prefix' => '{classroom:uuid}', 'middleware' => ['class_owner-only']], function () {
             Route::get('invites', [ClassroomInviteController::class, 'index']);
             Route::post('invite', [ClassroomInviteController::class, 'invite']);
             Route::delete('invite/{invite}', [ClassroomInviteController::class, 'destroy']);

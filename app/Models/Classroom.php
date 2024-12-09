@@ -26,6 +26,11 @@ class Classroom extends Model
         return $this->students()->where('student_id', $user->id)->exists();
     }
 
+    public function isOwner(User $user): bool
+    {
+        return $user->id === $this->teacher_id;
+    }
+
     public function teacher(): BelongsTo
     {
         return $this->belongsTo(User::class, 'teacher_id', 'id');
